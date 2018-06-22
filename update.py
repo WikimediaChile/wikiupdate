@@ -6,7 +6,7 @@ import configparser
 
 def read_csv(dump='dump.csv'):
     """
-    getCacheDump(dump):
+    read_csv(dump):
         Obtiene el elemento del cache según la especificación de CSV
     """
     try:
@@ -21,9 +21,9 @@ def read_csv(dump='dump.csv'):
 
 def write_csv(line, archivo='dump.csv', separador='|'):
     """
-    printToCsv(archivo='dump.csv',delimeter=';',line):
-    Imprime en archivo la linea, separada por separador como csv
-    Jara (Asunción)|Avenida brasilia asuncion paraguay.jpg|<URL>
+    write_csv(archivo='dump.csv',delimeter=';',line):
+        Imprime en archivo la linea, separada por separador como csv
+        Jara (Asunción)|Avenida brasilia asuncion paraguay.jpg|<URL>
     """
     with open(archivo, mode='a', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file, delimiter=separador)
@@ -32,6 +32,10 @@ def write_csv(line, archivo='dump.csv', separador='|'):
 
 
 def get_data():
+    """
+    get_data():
+        Obtiene los datos desde la API
+    """
     payload = {'action': 'query', 'format': 'json', 'generator': 'categorymembers',
                'prop': 'imageinfo', 'iiprop': 'user|timestamp',
                'gcmtitle': 'Category:Images from Wiki Loves Earth 2018 in Chile', 'gcmtype': 'file',
@@ -54,6 +58,10 @@ def get_data():
 
 
 def convert_element(element):
+    """
+    convert_element(element):
+        Normaliza un elemento para inyectarlo en la hoja de cálculo
+    """
     url = urllib.parse.quote(element.get('title'))
     element['url'] = 'https://commons.wikimedia.org/wiki/{0}'.format(url)
     element['titulo'] = element.get('title').replace('File:', '')
@@ -63,6 +71,10 @@ def convert_element(element):
 
 
 def add_docs(element):
+    """
+    add_docs(element):
+        Añade un elemento a una hoja de cálculo en Google Docs, según la URL
+    """
     payload = {'Nombre': element.get('title'), 'URL': element.get('url'),
                'Fecha': element.get('timestamp'), 'Autor': element.get('autor'),
                'Identificable': '',
@@ -72,6 +84,10 @@ def add_docs(element):
 
 
 def run_elements(lista):
+    """
+    run_elements(lista):
+        Ejecuta la lista de valores
+    """
     elements = read_csv()
     for el in lista:
         el = convert_element(el)
@@ -82,8 +98,7 @@ def run_elements(lista):
 
 
 def main():
-    lista = get_data()
-    run_elements(lista)
+    run_elements(get_data())
 
 
 if __name__ == '__main__':
