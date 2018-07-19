@@ -49,7 +49,7 @@ def get_data():
         datas = data.json()
         lista += datas.get('query').get('pages').values()
         if datas.get('continue'):
-            payload['cmcontinue'] = datas.get('continue').get('cmcontinue')
+            payload['gcmcontinue'] = datas.get('continue').get('gcmcontinue')
         else:
             continuar = False
         print ("Artículos... {0}".format(len(lista)))
